@@ -1,0 +1,20 @@
+{
+  "site": {
+    "name": "Remotion Tutorial",
+    "tagline": "Panduan langkah demi langkah membuat video dengan Remotion dan AI.",
+    "description": "Kumpulan tutorial bergambar: dari menyiapkan server render, membuat naskah dan voice-over, sampai video MP4 siap tayang.",
+    "repo": "https://github.com/sodikinnaa/remotion-tutorial"
+  },
+  "tutorials": [
+    {
+      "slug": "remotion-reelforge",
+      "title": "Dari Ide sampai Reels Siap Tayang",
+      "summary": "Alur lengkap ReelForge: Colab → ChatGPT → Cartesia → Claude → render MP4.",
+      "level": "Pemula",
+      "duration": "± 45 menit",
+      "steps": 30,
+      "cover": "images/05-reelforge-studio.webp",
+      "tags": ["Remotion", "ChatGPT", "Claude", "Cartesia", "Colab"]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tutorial</title>
+  <meta name="description" content="Tutorial langkah demi langkah dengan screenshot.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237b61ff'/%3E%3Cpath d='M22 18l24 14-24 14z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body id="top">
+  <div class="progress-bar-top" id="scroll-progress" aria-hidden="true"></div>
+  <div class="topbar">
+    <div class="container">
+      <a class="brand" href="./"><span class="logo">▶</span><span id="brand-name">Tutorial</span></a>
+      <span class="spacer"></span>
+      <span class="progress-pill" id="progress-pill" aria-live="polite"></span>
+      <nav>
+        <a href="./" class="hide-sm">Semua tutorial</a>
+        <a href="#" id="repo-link" target="_blank" rel="noopener" class="hide-sm">GitHub ↗</a>
+        <button class="btn-ghost" id="theme-toggle" type="button" title="Ganti tema" aria-label="Ganti tema">◐</button>
+      </nav>
+    </div>
+  </div>
+
+  <div id="app"><p class="empty">Memuat tutorial…</p></div>
+
+  <footer>
+    <div class="container">
+      <span>Dibuat dengan template landing page tutorial yang dapat dipakai ulang.</span>
+      <span><a href="#top">Kembali ke atas ↑</a></span>
+    </div>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Pratinjau gambar">
+    <div class="lb-inner">
+      <img class="lb-img" src="" alt="">
+      <div class="lb-cap"></div>
+      <button class="lb-btn prev" type="button" aria-label="Gambar sebelumnya">‹</button>
+      <button class="lb-btn next" type="button" aria-label="Gambar berikutnya">›</button>
+      <button class="lb-btn lb-close" type="button" aria-label="Tutup">✕</button>
+    </div>
+  </dialog>
+
+  <script src="assets/tutorial.js"></script>
+</body>
+</html>

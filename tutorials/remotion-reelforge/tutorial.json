@@ -1,0 +1,295 @@
+{
+  "slug": "remotion-reelforge",
+  "title": "Dari Ide sampai Reels Siap Tayang",
+  "subtitle": "Tutorial lengkap membuat video Reels dengan ReelForge: naskah dari ChatGPT, voice-over dari Cartesia, project Remotion dari Claude, lalu render MP4 di Google Colab.",
+  "eyebrow": "Tutorial Remotion",
+  "level": "Pemula",
+  "duration": "± 45 menit",
+  "updated": "2026-11-05",
+  "author": "Tim Remotion Tutorial",
+  "tags": ["Remotion", "ReelForge", "ChatGPT", "Claude", "Cartesia", "Google Colab"],
+  "hero_image": "images/05-reelforge-studio.webp",
+  "result": {
+    "title": "Hasil akhir",
+    "text": "Satu video vertikal 1080×1920 (9:16) berdurasi ± 30 detik dengan motion graphic Remotion, subtitle, dan voice-over bahasa Indonesia, siap diunggah ke Instagram Reels.",
+    "image": "images/42-reelforge-video-siap.webp"
+  },
+  "requirements": [
+    { "name": "Google Colab", "note": "Akun Google untuk menjalankan server ReelForge (GPU T4 gratis).", "url": "https://colab.research.google.com/" },
+    { "name": "ChatGPT", "note": "Akun gratis untuk membuat naskah dan teks voice-over.", "url": "https://chatgpt.com/" },
+    { "name": "Claude", "note": "Akun gratis untuk membuat project Remotion (ZIP).", "url": "https://claude.ai/" },
+    { "name": "Cartesia", "note": "Akun gratis untuk text-to-speech bahasa Indonesia.", "url": "https://www.cartesia.ai/" },
+    { "name": "Browser desktop", "note": "Chrome atau Edge. Gunakan mode Incognito jika ingin memakai email khusus." }
+  ],
+  "pipeline": [
+    { "label": "01 / Script", "name": "ChatGPT", "desc": "Storyboard TXT + full voice-over" },
+    { "label": "02 / Voice", "name": "Cartesia", "desc": "Ubah naskah menjadi MP3 / WAV" },
+    { "label": "03 / Motion", "name": "Claude", "desc": "TXT + audio menjadi ZIP Remotion" },
+    { "label": "04 / Export", "name": "ReelForge", "desc": "Upload ZIP, render, preview MP4" }
+  ],
+  "sections": [
+    {
+      "id": "colab",
+      "title": "Siapkan server ReelForge di Google Colab",
+      "intro": "ReelForge berjalan sebagai notebook Colab yang menyalakan server render Remotion dan membukanya lewat Cloudflare Quick Tunnel. Cukup jalankan sekali di awal sesi.",
+      "steps": [
+        {
+          "title": "Buka notebook dan ubah jenis runtime",
+          "text": "Buka notebook ReelForge di Google Colab. Pada menu atas klik <b>Runtime</b>, lalu pilih <b>Ubah jenis runtime</b>.",
+          "images": [{ "src": "images/01-colab-runtime-menu.webp", "caption": "Menu Runtime → Ubah jenis runtime" }]
+        },
+        {
+          "title": "Pilih akselerator GPU T4",
+          "text": "Pada dialog yang muncul pilih <b>Python 3</b> sebagai jenis runtime dan <b>GPU T4</b> sebagai akselerator hardware, lalu klik <b>Simpan</b>.",
+          "images": [{ "src": "images/02-colab-pilih-gpu-t4.webp", "caption": "Akselerator hardware: GPU T4" }],
+          "tip": "GPU T4 mempercepat encoding video. Jika kuota GPU habis, render tetap bisa jalan di CPU tetapi lebih lambat."
+        },
+        {
+          "title": "Jalankan semua sel",
+          "text": "Klik <b>Runtime → Jalankan semua</b> (Ctrl+F9). Saat muncul peringatan <i>Notebook ini tidak ditulis oleh Google</i>, klik <b>Tetap jalankan</b>.",
+          "images": [{ "src": "images/03-colab-peringatan-notebook.webp", "caption": "Klik Tetap jalankan pada peringatan" }]
+        },
+        {
+          "title": "Tunggu setup selesai dan buka Web Studio",
+          "text": "Log akan menampilkan proses instalasi Node, Chromium, FFmpeg, dan pembuatan tunnel. Setelah muncul tombol <b>BUKA REELFORGE WEB STUDIO</b>, klik tombol tersebut.",
+          "images": [
+            { "src": "images/04-colab-log-buka-studio.webp", "caption": "Tombol BUKA REELFORGE WEB STUDIO muncul setelah setup selesai" },
+            { "src": "images/05-reelforge-studio.webp", "caption": "Halaman ReelForge Web Studio terbuka di tab baru" }
+          ],
+          "warning": "Siapa pun yang memiliki URL tunnel bisa mengakses web ini. Jangan bagikan link-nya secara publik, dan biarkan tab Colab tetap terbuka selama bekerja."
+        }
+      ]
+    },
+    {
+      "id": "chatgpt",
+      "title": "Registrasi ChatGPT",
+      "intro": "ChatGPT dipakai untuk menulis storyboard dan teks voice-over. Lewati bagian ini jika sudah punya akun.",
+      "steps": [
+        {
+          "title": "Daftar dengan email",
+          "text": "Buka <a href=\"https://chatgpt.com\" target=\"_blank\" rel=\"noopener\">chatgpt.com</a>, klik <b>Daftar gratis</b>, lalu masukkan alamat email dan klik <b>Lanjutkan</b>.",
+          "images": [{ "src": "images/06-chatgpt-daftar.webp", "caption": "Dialog Masuk atau daftar" }]
+        },
+        {
+          "title": "Masukkan kode verifikasi",
+          "text": "Cek kotak masuk email, salin kode verifikasi 6 digit, lalu tempel pada kolom <b>Kode</b> dan klik <b>Lanjutkan</b>.",
+          "images": [
+            { "src": "images/07-chatgpt-cek-email.webp", "caption": "Halaman Cek kotak masuk Anda" },
+            { "src": "images/08-chatgpt-kode-verifikasi.webp", "caption": "Kode sudah dimasukkan" }
+          ]
+        },
+        {
+          "title": "Isi nama dan usia",
+          "text": "Masukkan nama lengkap dan usia, lalu klik <b>Lanjutkan</b>. Setelah muncul halaman <i>Semua sudah siap</i>, klik <b>Lanjutkan</b> sekali lagi.",
+          "images": [
+            { "src": "images/09-chatgpt-nama-usia.webp", "caption": "Form nama dan usia" },
+            { "src": "images/10-chatgpt-semua-siap.webp", "caption": "Konfirmasi akun siap" }
+          ]
+        },
+        {
+          "title": "Beranda ChatGPT siap digunakan",
+          "text": "Akun sudah aktif. Biarkan tab ini terbuka, kita akan kembali ke sini pada langkah pembuatan naskah.",
+          "images": [{ "src": "images/11-chatgpt-beranda.webp", "caption": "Beranda ChatGPT" }]
+        }
+      ]
+    },
+    {
+      "id": "claude",
+      "title": "Registrasi Claude",
+      "intro": "Claude dipakai untuk mengubah naskah dan audio menjadi project Remotion lengkap dalam bentuk ZIP.",
+      "steps": [
+        {
+          "title": "Masuk dengan email",
+          "text": "Buka <a href=\"https://claude.ai\" target=\"_blank\" rel=\"noopener\">claude.ai</a>, masukkan alamat email, lalu klik <b>Lanjutkan dengan email</b>.",
+          "images": [{ "src": "images/12-claude-login.webp", "caption": "Halaman masuk Claude" }]
+        },
+        {
+          "title": "Klik tombol Masuk dari email",
+          "text": "Buka email dari Anthropic dan klik tombol <b>Masuk</b>. Tautan hanya berlaku 10 menit.",
+          "images": [{ "src": "images/13-claude-email-masuk.webp", "caption": "Email verifikasi Claude" }]
+        },
+        {
+          "title": "Setujui ketentuan dan buat akun",
+          "text": "Centang persetujuan <i>Consumer Terms</i> dan <i>Acceptable Use Policy</i>, lalu klik <b>Buat akun</b>.",
+          "images": [{ "src": "images/14-claude-buat-akun.webp", "caption": "Halaman Mari buat akun Anda" }]
+        },
+        {
+          "title": "Pilih penggunaan pribadi, lalu lewati penawaran paket",
+          "text": "Pilih <b>Untuk penggunaan pribadi</b>. Pada halaman paket, pilih <b>Gunakan Claude secara gratis</b> (lewati).",
+          "images": [
+            { "src": "images/15-claude-rencana-penggunaan.webp", "caption": "Pilih Untuk penggunaan pribadi" },
+            { "src": "images/16-claude-paket.webp", "caption": "Pilih paket Free" }
+          ]
+        },
+        {
+          "title": "Lewati aplikasi desktop dan lanjutkan",
+          "text": "Pada halaman aplikasi desktop klik <b>Lewati</b>. Pada halaman <i>Sebelum chat pertama Anda</i> klik <b>Lanjutkan</b>.",
+          "images": [
+            { "src": "images/17-claude-aplikasi-desktop.webp", "caption": "Penawaran aplikasi desktop, pilih Lewati" },
+            { "src": "images/18-claude-sebelum-chat.webp", "caption": "Sebelum chat pertama, klik Lanjutkan" }
+          ]
+        },
+        {
+          "title": "Beranda Claude siap digunakan",
+          "text": "Akun Claude sudah aktif. Biarkan tab ini terbuka untuk langkah pembuatan project Remotion.",
+          "images": [{ "src": "images/19-claude-beranda.webp", "caption": "Beranda Claude" }]
+        }
+      ]
+    },
+    {
+      "id": "cartesia",
+      "title": "Daftar Cartesia",
+      "intro": "Cartesia menyediakan text-to-speech dengan suara bahasa Indonesia yang natural. Kuota gratisnya cukup untuk beberapa video pendek.",
+      "steps": [
+        {
+          "title": "Buka cartesia.ai dan klik Try Cartesia",
+          "text": "Kunjungi <a href=\"https://www.cartesia.ai/\" target=\"_blank\" rel=\"noopener\">cartesia.ai</a>, lalu klik tombol <b>Try Cartesia</b> di pojok kanan atas.",
+          "images": [{ "src": "images/20-cartesia-landing.webp", "caption": "Halaman depan Cartesia" }]
+        },
+        {
+          "title": "Isi form pendaftaran dan verifikasi email",
+          "text": "Isi nama depan, nama belakang, email, dan password, lalu klik <b>Continue</b>. Masukkan kode 6 digit yang dikirim ke email.",
+          "images": [
+            { "src": "images/21-cartesia-daftar.webp", "caption": "Form pendaftaran Cartesia" },
+            { "src": "images/22-cartesia-kode-verifikasi.webp", "caption": "Masukkan kode verifikasi" }
+          ]
+        },
+        {
+          "title": "Lewati survei onboarding",
+          "text": "Pada pertanyaan <i>How did you hear about us?</i> klik <b>Skip</b>. Pada <i>Where do you want to start?</i> pilih <b>I'm exploring</b> atau <b>Start with Models</b>.",
+          "images": [
+            { "src": "images/23-cartesia-how-did-you-hear.webp", "caption": "Klik Skip" },
+            { "src": "images/24-cartesia-where-to-start.webp", "caption": "Pilih Models atau I'm exploring" }
+          ]
+        },
+        {
+          "title": "Buka menu Text-to-Speech",
+          "text": "Jika masuk ke halaman <i>Agents</i>, klik tab <b>Models</b> di pojok kiri bawah, lalu pilih menu <b>Text-to-Speech</b> di sidebar.",
+          "images": [
+            { "src": "images/25-cartesia-agents.webp", "caption": "Halaman Agents, pindah ke tab Models" },
+            { "src": "images/26-cartesia-text-to-speech.webp", "caption": "Halaman Text-to-Speech" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "naskah",
+      "title": "Buat naskah dan voice-over text dengan ChatGPT",
+      "intro": "ReelForge menyediakan Master Prompt yang otomatis menyusun brief video. Kamu hanya mengisi topik, durasi, dan gaya.",
+      "steps": [
+        {
+          "title": "Isi Master Prompt di ReelForge, salin bagian ChatGPT",
+          "text": "Di ReelForge Web Studio, bagian <b>Prompt Library</b>: isi <b>Topik</b>, <b>Target durasi</b>, <b>Deskripsi</b>, <b>Target audiens</b>, <b>Call to action</b>, dan <b>Gaya visual</b>. Pastikan tab <b>ChatGPT</b> aktif, lalu klik <b>Salin prompt</b>.",
+          "images": [{ "src": "images/27-reelforge-master-prompt.webp", "caption": "Master prompt siap copy, tab ChatGPT" }],
+          "tip": "Contoh gaya visual: Kinetic Typography, Flat 2D Vector Animation, Line Art, Minimalist Monoline."
+        },
+        {
+          "title": "Tempel prompt di ChatGPT",
+          "text": "Kembali ke tab ChatGPT, tempel prompt pada kotak chat dan kirim. ChatGPT akan membuat production file lengkap (brief, storyboard, palet warna) dan <b>FULL TEXT VOICE-OVER FINAL</b>.",
+          "images": [
+            { "src": "images/28-chatgpt-paste-prompt.webp", "caption": "Prompt ditempel di ChatGPT" },
+            { "src": "images/29-chatgpt-output-voice-over.webp", "caption": "Output: Full text voice-over final" }
+          ]
+        },
+        {
+          "title": "Salin teks voice-over dan unduh file TXT",
+          "text": "Salin seluruh teks pada bagian <b>FULL TEXT VOICE-OVER FINAL</b> (akan dipakai di Cartesia). Lalu unduh file <code>motion_graphic_remotion.txt</code> yang dilampirkan ChatGPT.",
+          "images": [
+            { "src": "images/33-chatgpt-download-txt.webp", "caption": "Unduh file TXT dari ChatGPT" },
+            { "src": "images/34-chatgpt-production-file.webp", "caption": "Isi production file: brief, konsep, palet warna" }
+          ],
+          "note": "Naskah ini juga menjadi acuan voice-over di storyboard. Jangan ubah isinya setelah audio dibuat agar subtitle tetap sinkron."
+        }
+      ]
+    },
+    {
+      "id": "voice",
+      "title": "Buat voice-over bahasa Indonesia di Cartesia",
+      "intro": "Ubah teks voice-over menjadi audio. Pilih suara berbahasa Indonesia agar pelafalannya natural.",
+      "steps": [
+        {
+          "title": "Tempel teks di Text-to-Speech",
+          "text": "Di halaman <b>Text-to-Speech</b> Cartesia, tempel teks voice-over pada kolom transcript. Lalu klik pilihan <b>voice</b> di panel kanan atas.",
+          "images": [{ "src": "images/30-cartesia-paste-teks.webp", "caption": "Teks voice-over sudah ditempel" }]
+        },
+        {
+          "title": "Cari suara bahasa Indonesia",
+          "text": "Pada kotak pencarian ketik <b>indonesia</b>. Pilih salah satu suara, misalnya <i>Galang – Serene Communicator</i> atau <i>Intan – Service Representative</i>.",
+          "images": [{ "src": "images/31-cartesia-cari-suara-indonesia.webp", "caption": "Daftar suara berbahasa Indonesia" }],
+          "tip": "Klik ikon play untuk mendengar contoh sebelum memilih. Atur speed sekitar 1.0x agar durasi sesuai target."
+        },
+        {
+          "title": "Klik Generate dan unduh audio",
+          "text": "Klik <b>Generate</b>. Setelah audio muncul di bagian bawah, klik ikon <b>Download audio</b> untuk mengunduh file WAV/MP3.",
+          "images": [
+            { "src": "images/32-cartesia-generate.webp", "caption": "Audio berhasil dibuat" },
+            { "src": "images/35-cartesia-download-audio.webp", "caption": "Tombol Download audio" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "remotion",
+      "title": "Buat project Remotion dengan Claude",
+      "intro": "Claude menerima naskah TXT dan audio, lalu membuat project Remotion lengkap (komposisi, animasi, subtitle, timing) dalam satu file ZIP.",
+      "steps": [
+        {
+          "title": "Pilih prompt untuk Claude di ReelForge",
+          "text": "Kembali ke ReelForge, pada <b>Prompt Library</b> klik tab <b>Claude</b>, lalu klik <b>Salin prompt</b>.",
+          "images": [{ "src": "images/36-reelforge-prompt-claude.webp", "caption": "Master prompt, tab Claude" }]
+        },
+        {
+          "title": "Tempel prompt ke Claude dan upload file",
+          "text": "Di Claude, tempel prompt pada kotak chat. Klik ikon <b>+</b> lalu upload file <b>TXT</b> dari ChatGPT dan file <b>audio</b> dari Cartesia. Kirim pesan.",
+          "images": [
+            { "src": "images/37-claude-paste-prompt.webp", "caption": "Prompt ditempel di Claude" },
+            { "src": "images/38-claude-upload-file.webp", "caption": "File TXT dan audio terlampir" }
+          ]
+        },
+        {
+          "title": "Unduh file ZIP project",
+          "text": "Tunggu Claude selesai menyusun project. Di akhir jawaban akan ada lampiran <code>remotion_reels_remotion.zip</code>. Klik untuk mengunduhnya.",
+          "images": [{ "src": "images/39-claude-unduh-zip.webp", "caption": "File ZIP siap diunduh" }],
+          "warning": "Paket Free Claude memiliki batas penggunaan per 5 jam. Jika kena batas sebelum ZIP selesai, tunggu reset lalu minta Claude melanjutkan."
+        }
+      ]
+    },
+    {
+      "id": "render",
+      "title": "Render video MP4 di ReelForge",
+      "intro": "Langkah terakhir: upload ZIP ke ReelForge. Server di Colab akan menginstal dependency, me-render frame, dan menggabungkannya dengan audio.",
+      "steps": [
+        {
+          "title": "Upload ZIP dan mulai render",
+          "text": "Pada panel <b>ZIP → Video MP4</b>, seret file ZIP atau klik <b>Pilih atau seret file ZIP</b>. Pilih <b>Render Mode: Auto</b>, centang kotak konfirmasi, lalu klik <b>Upload &amp; Render MP4</b>.",
+          "images": [{ "src": "images/40-reelforge-upload-zip.webp", "caption": "ZIP terpilih, centang konfirmasi, lalu Upload & Render" }]
+        },
+        {
+          "title": "Tunggu proses render",
+          "text": "Progress bar menampilkan tahap: unzip, install dependency, render frame, dan encode. Log detail bisa dilihat pada kotak hitam di bawahnya.",
+          "images": [{ "src": "images/41-reelforge-render-berjalan.webp", "caption": "Render berjalan, fallback ke CPU jika GPU tidak tersedia" }],
+          "note": "Render 30 detik video biasanya memakan waktu 3–8 menit tergantung kompleksitas animasi."
+        },
+        {
+          "title": "Selesai, video siap diputar",
+          "text": "Setelah 100%, muncul bagian <b>Video siap diputar</b>. Putar untuk mengecek hasil, lalu unduh MP4 dan unggah ke Instagram Reels.",
+          "images": [{ "src": "images/42-reelforge-video-siap.webp", "caption": "Video siap diputar dan diunduh" }]
+        }
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Render gagal dengan pesan 'Lihat log untuk detail'. Apa yang harus dicek?",
+      "a": "Buka log di panel render. Penyebab paling umum: ZIP tidak berisi package.json di root, atau dependency gagal diinstal. Minta Claude memperbaiki struktur project lalu upload ulang."
+    },
+    {
+      "q": "Subtitle tidak sinkron dengan suara.",
+      "a": "Timing subtitle dibuat Claude secara estimasi. Edit file src/data/captions.ts di dalam ZIP, sesuaikan waktu per kalimat, lalu zip ulang dan render kembali."
+    },
+    {
+      "q": "URL ReelForge tidak bisa dibuka lagi.",
+      "a": "Tunnel Cloudflare mati saat runtime Colab berhenti. Jalankan ulang semua sel di Colab untuk mendapat URL baru."
+    }
+  ]
+}
