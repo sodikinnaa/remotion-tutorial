@@ -7,15 +7,17 @@ Tutorial pertama: **Dari Ide sampai Reels Siap Tayang** (ReelForge: Colab → Ch
 ## Struktur
 
 ```
-index.html                 # daftar semua tutorial
-tutorial.html              # template halaman tutorial (baca ?t=<slug>)
-assets/site.css            # tema (dark/light), layout, print
-assets/tutorial.js         # renderer: hero, alur, kebutuhan, TOC, langkah, lightbox, progres
-assets/index.js            # renderer halaman indeks
-tutorials/index.json       # registri tutorial + info situs
-tutorials/<slug>/tutorial.json   # konten satu tutorial
-tutorials/<slug>/images/         # screenshot (WebP, lebar 1400px)
-.github/workflows/pages.yml      # deploy otomatis ke GitHub Pages
+docs/                              # root situs (dipublikasikan GitHub Pages)
+  index.html                       # daftar semua tutorial
+  tutorial.html                    # template halaman tutorial (baca ?t=<slug>)
+  assets/site.css                  # tema (dark/light), layout, print
+  assets/tutorial.js               # renderer: hero, alur, kebutuhan, TOC, langkah, lightbox, progres
+  assets/index.js                  # renderer halaman indeks
+  tutorials/index.json             # registri tutorial + info situs
+  tutorials/<slug>/tutorial.json   # konten satu tutorial
+  tutorials/<slug>/images/         # screenshot (WebP, lebar 1400px)
+  .nojekyll                        # matikan Jekyll, sajikan file apa adanya
+.github/workflows/pages.yml        # deploy manual lewat Actions (opsional)
 ```
 
 ## Menjalankan secara lokal
@@ -23,16 +25,16 @@ tutorials/<slug>/images/         # screenshot (WebP, lebar 1400px)
 Halaman memuat JSON lewat `fetch`, jadi buka lewat server statis, bukan `file://`:
 
 ```bash
-npx serve .
+npx serve docs
 ```
 
 lalu buka `http://localhost:3000`.
 
 ## Menambah tutorial baru
 
-1. Salin folder `tutorials/remotion-reelforge/` menjadi `tutorials/<slug-baru>/`.
+1. Salin folder `docs/tutorials/remotion-reelforge/` menjadi `docs/tutorials/<slug-baru>/`.
 2. Ganti isi `tutorial.json` dan screenshot di folder `images/`.
-3. Daftarkan slug baru di `tutorials/index.json`:
+3. Daftarkan slug baru di `docs/tutorials/index.json`:
 
 ```json
 {
@@ -74,4 +76,8 @@ python3 -c "from PIL import Image; import sys; im=Image.open(sys.argv[1]).conver
 
 ## Deploy ke GitHub Pages
 
-Workflow `.github/workflows/pages.yml` berjalan setiap push ke `main` (dan branch pengembangan) dan menerbitkan seluruh repo sebagai situs statis. Di **Settings → Pages**, pastikan *Source* diatur ke **GitHub Actions**.
+Situs dipublikasikan dari folder `docs/` di branch `main`: **Settings → Pages → Source: Deploy from a branch**, branch `main`, folder `/docs`. Setiap push ke `main` otomatis diterbitkan oleh GitHub.
+
+Alamat situs: https://sodikinnaa.github.io/remotion-tutorial/
+
+Workflow `.github/workflows/pages.yml` disediakan sebagai alternatif jika *Source* diganti ke **GitHub Actions** (lihat komentar di dalam file).

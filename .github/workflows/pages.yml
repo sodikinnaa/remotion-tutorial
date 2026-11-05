@@ -1,10 +1,14 @@
-name: Deploy GitHub Pages
+# Deploy opsional lewat GitHub Actions.
+#
+# Repo ini di-deploy dengan pengaturan Settings → Pages → Source: "Deploy from a
+# branch" (branch main, folder /docs). GitHub membangun dan menerbitkannya
+# otomatis setiap push ke main, jadi workflow ini TIDAK berjalan otomatis.
+#
+# Jika suatu saat Source diganti ke "GitHub Actions", ubah trigger di bawah
+# menjadi `push: branches: [main]` dan workflow ini yang akan menerbitkan docs/.
+name: Deploy GitHub Pages (manual)
 
 on:
-  push:
-    branches:
-      - main
-      - claude/tender-mendel-u7cdra
   workflow_dispatch:
 
 permissions:
@@ -28,20 +32,18 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Validate tutorial JSON
         run: |
           set -e
-          for f in tutorials/index.json tutorials/*/tutorial.json; do
+          for f in docs/tutorials/index.json docs/tutorials/*/tutorial.json; do
             node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" && echo "ok  $f"
           done
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: docs
 
       - name: Deploy
         id: deployment
